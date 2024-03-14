@@ -78,12 +78,14 @@ export class Tab2Page {
         const overnightData = new OvernightSleepData(this.sleepService.getCurrentSleepDateTime(), currDate);
         this.sleepService.logOvernightData(overnightData);
         
-        message = "Data successfully logged\n(" + this.getTimeSlept(this.sleepService.getCurrentSleepDateTime(), currDate) + ")";
+        // message = "Data successfully logged\n(" + this.getTimeSlept(this.sleepService.getCurrentSleepDateTime(), currDate) + ")";
+        message = "Data successfully logged";
         messageColor = 'green';
 
         // For testing/debugging purposes
         this.sleepService.printAllSleepData();
 
+        this.sleepService.saveData();
         this.showFeedback(message, messageColor);
       }
 
@@ -101,14 +103,13 @@ export class Tab2Page {
       message = "Bedtime Successfully Set";
       messageColor = 'green';
 
+      this.sleepService.saveData();
       this.showFeedback(message, messageColor);
     }
 
     this.randImageInt = Math.floor(Math.random() * 5) + 1;
     this.dayImagePath = `assets/images/day/sunrise${this.randImageInt}.jpg`;
     this.nightImagePath = `assets/images/night/sunset${this.randImageInt}.jpg`;
-
-    console.log(this.dayImagePath);
   }
 
   getTimeSlept(start:Date, end:Date)
@@ -123,11 +124,13 @@ export class Tab2Page {
 		return Math.floor(difference_ms / (1000*60*60)) + " hours, " + Math.floor(difference_ms / (1000*60) % 60) + " minutes.";
   }
   
-  submitNumber() {
+  submitNumber() 
+  {
     let message = '';
     let messageColor = '';
   
-    if(this.selectedNumber !== undefined) {
+    if (this.selectedNumber !== undefined) 
+    {
       const sleepinessData = new StanfordSleepinessData(this.selectedNumber);
       this.sleepService.logSleepinessData(sleepinessData);
   
@@ -136,7 +139,11 @@ export class Tab2Page {
   
       message = 'Data Successfully Added';
       messageColor = 'green';
-    } else {
+
+      this.sleepService.saveData();
+    } 
+    else 
+    {
       message = 'You must select a number';
       messageColor = 'orange';
     }

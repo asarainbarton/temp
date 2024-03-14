@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SleepData } from '../data/sleep-data';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
+import { Storage } from '@capacitor/storage';
 
 @Injectable({
   	providedIn: 'root'
@@ -15,13 +16,42 @@ export class SleepService
 	public static sleepDateTime: Date;
 	public static sleepMode:boolean = false;
 
-	constructor() {}
+	constructor() 
+	{
+		this.loadData();
+	}
 
 	public addDefaultData() 
 	{
 		this.logOvernightData(new OvernightSleepData(new Date('February 18, 2021 01:03:00'), new Date('February 18, 2021 09:25:00')));
 		this.logSleepinessData(new StanfordSleepinessData(4, new Date('February 19, 2021 14:38:00')));
 		this.logOvernightData(new OvernightSleepData(new Date('February 20, 2021 23:11:00'), new Date('February 21, 2021 08:03:00')));
+	}
+
+	async loadData() 
+	{
+		const { value } = await Storage.get({ key: 'sleepData' });
+		if (value) 
+		{
+		  const data = JSON.parse(value);
+		  SleepService.AllSleepData = data.allSleepData || [];
+		  SleepService.sleepDateTime = data.sleepDateTime || null;
+		  SleepService.sleepMode = data.sleepMode || null;
+		}
+	}
+
+	async saveData() 
+	{
+		const dataToSave = {
+		  allSleepData: SleepService.AllSleepData,
+		  sleepDateTime: SleepService.sleepDateTime,
+		  sleepMode: SleepService.sleepMode,
+		};
+		
+		await Storage.set({
+		  key: 'sleepData',
+		  value: JSON.stringify(dataToSave),
+		});
 	}
 
 	public logOvernightData(sleepData:OvernightSleepData) 
@@ -62,5 +92,10 @@ export class SleepService
 	public setCurrentSleepMode(mode:boolean)
 	{
 		SleepService.sleepMode = mode;
+	}
+
+	public getTotalSleepDataSize()
+	{
+		return SleepService.AllSleepData.length;
 	}
  }

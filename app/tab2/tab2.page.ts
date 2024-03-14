@@ -30,13 +30,17 @@ export class Tab2Page {
   showNumbers: boolean = false;
   feedbackMessage: string | null = null;
   feedbackMessageColor: string = 'black';
-  isLoggingBedtime: boolean = !this.sleepService.getCurrentSleepMode();
+  isLoggingBedtime: boolean = !this.sleepService.getCurrentSleepMode()
   randImageInt = Math.floor(Math.random() * 5) + 1;
   dayImagePath = `assets/images/day/sunrise${this.randImageInt}.jpg`;
   nightImagePath = `assets/images/night/sunset${this.randImageInt}.jpg`;
   private feedbackTimeout: any;
 
-  constructor(private sleepService: SleepService) {}
+  constructor(private sleepService: SleepService) 
+  {
+    this.sleepService.loadData();
+    this.sleepService.printAllSleepData();
+  }
 
   addSleepiness() {
     // Logic to add sleepiness
@@ -83,7 +87,7 @@ export class Tab2Page {
         messageColor = 'green';
 
         // For testing/debugging purposes
-        this.sleepService.printAllSleepData();
+        // this.sleepService.printAllSleepData();
 
         this.sleepService.saveData();
         this.showFeedback(message, messageColor);
@@ -91,6 +95,8 @@ export class Tab2Page {
 
       this.sleepService.setCurrentSleepMode(false);
       this.isLoggingBedtime = true;
+
+      this.sleepService.printDataSummary();
     } 
     else // In this case, user had just clicked "log bedtime" button
     {
@@ -105,6 +111,8 @@ export class Tab2Page {
 
       this.sleepService.saveData();
       this.showFeedback(message, messageColor);
+
+      this.sleepService.printDataSummary();
     }
 
     this.randImageInt = Math.floor(Math.random() * 5) + 1;
@@ -135,7 +143,7 @@ export class Tab2Page {
       this.sleepService.logSleepinessData(sleepinessData);
   
       // For testing/debugging purposes
-      this.sleepService.printAllSleepData();
+      // this.sleepService.printAllSleepData();
   
       message = 'Data Successfully Added';
       messageColor = 'green';
@@ -152,6 +160,8 @@ export class Tab2Page {
   
     this.showNumbers = false;
     this.selectedNumber = undefined;
+
+    this.sleepService.printDataSummary();
   }
 
   showFeedback(message: string, color: string) {

@@ -16,10 +16,10 @@ export class SleepService
 	public static sleepDateTime: Date;
 	public static sleepMode:boolean = false;
 
-	constructor() 
-	{
-		this.loadData();
-	}
+	// constructor() 
+	// {
+	// 	this.loadData();
+	// }
 
 	public addDefaultData() 
 	{
@@ -53,6 +53,20 @@ export class SleepService
 		  value: JSON.stringify(dataToSave),
 		});
 	}
+
+	public printDataSummary() 
+	{
+		console.log(`Total Sleep Data Entries: ${SleepService.AllSleepData.length}`);
+		
+		// Check if sleepDateTime exists and is a Date object before calling toISOString
+		const dateTimeString = SleepService.sleepDateTime instanceof Date ? 
+							   SleepService.sleepDateTime.toISOString() : 
+							   'Not set or not a Date object';
+	  
+		console.log(`Current Sleep DateTime: ${dateTimeString}`);
+		console.log(`Current Sleep Mode: ${SleepService.sleepMode}`);
+	}
+	  
 
 	public logOvernightData(sleepData:OvernightSleepData) 
 	{

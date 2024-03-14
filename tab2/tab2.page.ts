@@ -35,6 +35,11 @@ export class Tab2Page {
     this.selectedNumber = number;
   }
 
+  cancel() {
+    this.selectedNumber = undefined;
+    this.showNumbers = false;
+  }
+
   submitNumber() {
     console.log(this.selectedNumber);
     this.showNumbers = false;

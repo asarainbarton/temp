@@ -2,4 +2,22 @@
     --background: var(--ion-color-primary);
     --color: var(--ion-color-light);
 }
+
+.button-container, .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action-buttons ion-button {
+    --background: auto; /* Resetting for custom colors */
+}
+
+ion-button[color="success"] {
+    --background: green;
+}
+
+ion-button[color="warning"] {
+    --background: orange;
+}
   

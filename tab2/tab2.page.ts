@@ -69,25 +69,25 @@ export class Tab2Page {
       messageColor = 'orange';
     }
   
-    setTimeout(() => this.feedbackMessage = null, 3000);
+    this.showFeedback(message, messageColor);
   
     this.showNumbers = false;
     this.selectedNumber = undefined;
   }
   
-  // // Helper method to show feedback message
-  // showFeedback(message: string, color: string) {
-  //   const feedbackElement = document.createElement('div');
-  //   feedbackElement.textContent = message;
-  //   feedbackElement.style.color = color;
-  //   feedbackElement.style.position = 'absolute';
-  //   feedbackElement.style.bottom = '20px'; // Adjust positioning as needed
-  //   feedbackElement.style.left = '50%';
-  //   feedbackElement.style.transform = 'translateX(-50%)';
-  //   document.body.appendChild(feedbackElement);
+  // Helper method to show feedback message
+  showFeedback(message: string, color: string) {
+    const feedbackElement = document.createElement('div');
+    feedbackElement.textContent = message;
+    feedbackElement.style.color = color;
+    feedbackElement.style.position = 'absolute';
+    feedbackElement.style.bottom = '7%'; // Adjust positioning as needed
+    feedbackElement.style.left = '50%';
+    feedbackElement.style.transform = 'translateX(-50%)';
+    document.body.appendChild(feedbackElement);
   
-  //   setTimeout(() => {
-  //     document.body.removeChild(feedbackElement);
-  //   }, 3000); // Remove the message after 3 seconds
-  // }
+    setTimeout(() => {
+      document.body.removeChild(feedbackElement);
+    }, 3000); // Remove the message after 3 seconds
+  }
 }

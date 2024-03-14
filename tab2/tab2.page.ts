@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { NgIf, NgForOf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tab2',
@@ -16,7 +17,8 @@ import { NgIf, NgForOf } from '@angular/common';
     ExploreContainerComponent,
     IonButton,
     NgIf,
-    NgForOf
+    NgForOf,
+    CommonModule
   ]
 })
 export class Tab2Page {

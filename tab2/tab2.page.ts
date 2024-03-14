@@ -44,7 +44,7 @@ export class Tab2Page {
 
   getButtonColor(number: number): string {
     const greenToRedRatio = number / 7;
-    return `hsl(${120 - greenToRedRatio * 120}, 100%, 50%)`; // HSL from green to red
+    return `hsl(${120 - greenToRedRatio * 120}, 60%, 50%)`; // HSL from green to red
   }
   
   submitNumber() {

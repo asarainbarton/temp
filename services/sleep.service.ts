@@ -8,11 +8,11 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 })
 export class SleepService 
 {
-	private static LoadDefaultData:boolean;
+	// private static LoadDefaultData:boolean;
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
-	public static sleepDateTime:Date;
+	public static sleepDateTime: Date;
 	public static sleepMode:boolean = false;
 
 	constructor() {}
@@ -42,10 +42,25 @@ export class SleepService
 		SleepService.AllSleepData.forEach((data) => {
 		console.log(data.summaryString());
 		});
-
-		console.log("All Sleepiness Data:");
-		SleepService.AllSleepinessData.forEach((data) => {
-		console.log(data.summaryString());
-		});
 	}
-}
+
+	public getCurrentSleepMode() 
+	{
+		return SleepService.sleepMode;
+	}
+
+	public getCurrentSleepDateTime()
+	{
+		return SleepService.sleepDateTime;
+	}
+
+	public setSleepDateTime(dateTime:Date)
+	{
+		SleepService.sleepDateTime = dateTime;
+	}
+
+	public setCurrentSleepMode(mode:boolean)
+	{
+		SleepService.sleepMode = mode;
+	}
+ }

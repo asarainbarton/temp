@@ -5,6 +5,7 @@ import { NgIf, NgForOf } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { SleepService } from '../services/sleep.service';
 import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
+import { OvernightSleepData } from '../data/overnight-sleep-data';
 
 @Component({
   selector: 'app-tab2',
@@ -29,6 +30,7 @@ export class Tab2Page {
   showNumbers: boolean = false;
   feedbackMessage: string | null = null;
   feedbackMessageColor: string = 'black';
+  isLoggingBedtime: boolean = !this.sleepService.getCurrentSleepMode();
 
   constructor(private sleepService: SleepService) {}
 
@@ -50,6 +52,65 @@ export class Tab2Page {
     const greenToRedRatio = number / 7;
     return `hsl(${120 - greenToRedRatio * 120}, 60%, 50%)`; // HSL from green to red
   }
+
+  handleLogBedtimeData() 
+  {
+    let message = '';
+    let messageColor = '';
+
+    // If true, then user pressed "log wakeup time" button
+    if (this.sleepService.getCurrentSleepMode()) 
+    {
+      // Error
+      if (this.sleepService.getCurrentSleepDateTime() === null)
+      {
+        message = "Error Extracting Bedtime Time";
+        messageColor = "orange";
+        this.showFeedback(message, messageColor);
+      }
+      else // We have a bedtime time
+      {
+        let currDate:Date = new Date();
+        const overnightData = new OvernightSleepData(this.sleepService.getCurrentSleepDateTime(), currDate);
+        this.sleepService.logOvernightData(overnightData);
+        
+        message = "Data successfully logged\n(" + this.getTimeSlept(this.sleepService.getCurrentSleepDateTime(), currDate) + ")";
+        messageColor = 'green';
+
+        // For testing/debugging purposes
+        this.sleepService.printAllSleepData();
+
+        this.showFeedback(message, messageColor);
+      }
+
+      this.sleepService.setCurrentSleepMode(false);
+      this.isLoggingBedtime = true;
+    } 
+    else // In this case, user had just clicked "log bedtime" button
+    {
+      // This value will get stored and saved overnight
+      this.sleepService.setSleepDateTime(new Date());
+      this.sleepService.setCurrentSleepMode(true);
+      this.isLoggingBedtime = false;
+
+      message = "Bedtime Successfully Set";
+      messageColor = 'green';
+
+      this.showFeedback(message, messageColor);
+    }
+  }
+
+  getTimeSlept(start:Date, end:Date)
+  {
+    var sleepStart_ms = start.getTime();
+		var sleepEnd_ms = end.getTime();
+
+		// Calculate the difference in milliseconds
+		var difference_ms = sleepEnd_ms - sleepStart_ms;
+		    
+		// Convert to hours and minutes
+		return Math.floor(difference_ms / (1000*60*60)) + " hours, " + Math.floor(difference_ms / (1000*60) % 60) + " minutes.";
+  }
   
   submitNumber() {
     let message = '';
@@ -62,7 +123,7 @@ export class Tab2Page {
       // For testing/debugging purposes
       this.sleepService.printAllSleepData();
   
-      message = 'Data successfully added';
+      message = 'Data Successfully Added';
       messageColor = 'green';
     } else {
       message = 'You must select a number';
@@ -75,19 +136,18 @@ export class Tab2Page {
     this.selectedNumber = undefined;
   }
   
-  // Helper method to show feedback message
   showFeedback(message: string, color: string) {
     const feedbackElement = document.createElement('div');
     feedbackElement.textContent = message;
     feedbackElement.style.color = color;
     feedbackElement.style.position = 'absolute';
-    feedbackElement.style.bottom = '7%'; // Adjust positioning as needed
+    feedbackElement.style.bottom = '7%';
     feedbackElement.style.left = '50%';
     feedbackElement.style.transform = 'translateX(-50%)';
     document.body.appendChild(feedbackElement);
   
     setTimeout(() => {
       document.body.removeChild(feedbackElement);
-    }, 2000); 
+    }, 3000); // Message gets removed after 2 seconds
   }
 }

@@ -13,8 +13,13 @@
     </ion-toolbar>
   </ion-header>
 
+  <!-- Button to add overnight data -->
+  <ion-button expand="full" class="add-overnight-sleep" (click)="handleLogBedtimeData()">
+    {{ isLoggingBedtime ? 'Log Bedtime 🌒' : 'Log Wakeup Time ☀️' }}
+  </ion-button>
+
   <!-- Button to add sleepiness -->
-  <ion-button expand="full" class="add-sleepiness" (click)="addSleepiness()">Add Sleepiness</ion-button>
+  <ion-button expand="full" class="add-sleepiness" *ngIf="isLoggingBedtime" (click)="addSleepiness()">Add Sleepiness 😴</ion-button>
   
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers" class="button-container">
@@ -25,6 +30,10 @@
   <div class="action-buttons" *ngIf="selectedNumber !== undefined || showNumbers">
     <ion-button color="success" (click)="submitNumber()">Submit</ion-button>
     <ion-button color="warning" (click)="cancel()">Cancel</ion-button>
+  </div>
+
+  <div class="image-container">
+    <img src="assets/images/sunrise.jpg" alt="Sunrise" class="sunrise-image">
   </div>
 
 </ion-content>

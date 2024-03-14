@@ -15,6 +15,7 @@
 
   <!-- Button to add sleepiness -->
   <ion-button expand="full" class="add-sleepiness" (click)="addSleepiness()">Add Sleepiness</ion-button>
+  <div *ngIf="feedbackMessage" [ngStyle]="{'color': feedbackMessageColor}" class="feedback-message"> {{ feedbackMessage }} </div>
   
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers" class="button-container">
@@ -26,5 +27,6 @@
     <ion-button color="success" (click)="submitNumber()">Submit</ion-button>
     <ion-button color="warning" (click)="cancel()">Cancel</ion-button>
   </div>
+
 </ion-content>
 

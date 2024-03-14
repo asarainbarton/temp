@@ -13,17 +13,6 @@ export class SleepService
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
 
-	// constructor(LoadDefaultData:boolean) 
-	// {
-	// 	SleepService.LoadDefaultData = LoadDefaultData;
-
-	// 	if (SleepService.LoadDefaultData) 
-	// 	{
-	// 		this.addDefaultData();
-	// 		SleepService.LoadDefaultData = false;
-	// 	}
-	// }
-
 	constructor() {}
 
 	public addDefaultData() 

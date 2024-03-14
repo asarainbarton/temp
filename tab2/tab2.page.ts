@@ -27,6 +27,8 @@ export class Tab2Page {
   numbers = [1, 2, 3, 4, 5, 6, 7];
   selectedNumber: number | undefined;
   showNumbers: boolean = false;
+  feedbackMessage: string | null = null;
+  feedbackMessageColor: string = 'black';
 
   constructor(private sleepService: SleepService) {}
 
@@ -49,17 +51,43 @@ export class Tab2Page {
     return `hsl(${120 - greenToRedRatio * 120}, 60%, 50%)`; // HSL from green to red
   }
   
-  submitNumber() 
-  {
-    if(this.selectedNumber !== undefined) 
-    {
+  submitNumber() {
+    let message = '';
+    let messageColor = '';
+  
+    if(this.selectedNumber !== undefined) {
       const sleepinessData = new StanfordSleepinessData(this.selectedNumber);
       this.sleepService.logSleepinessData(sleepinessData);
-
-      // For testing/debigging purposes
+  
+      // For testing/debugging purposes
       this.sleepService.printAllSleepData();
+  
+      message = 'Data successfully added';
+      messageColor = 'green';
+    } else {
+      message = 'You must select a number';
+      messageColor = 'orange';
     }
+  
+    setTimeout(() => this.feedbackMessage = null, 3000);
+  
     this.showNumbers = false;
     this.selectedNumber = undefined;
   }
+  
+  // // Helper method to show feedback message
+  // showFeedback(message: string, color: string) {
+  //   const feedbackElement = document.createElement('div');
+  //   feedbackElement.textContent = message;
+  //   feedbackElement.style.color = color;
+  //   feedbackElement.style.position = 'absolute';
+  //   feedbackElement.style.bottom = '20px'; // Adjust positioning as needed
+  //   feedbackElement.style.left = '50%';
+  //   feedbackElement.style.transform = 'translateX(-50%)';
+  //   document.body.appendChild(feedbackElement);
+  
+  //   setTimeout(() => {
+  //     document.body.removeChild(feedbackElement);
+  //   }, 3000); // Remove the message after 3 seconds
+  // }
 }

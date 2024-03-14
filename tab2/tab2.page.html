@@ -18,7 +18,7 @@
 
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers" class="button-container">
-    <ion-button *ngFor="let number of numbers" [ngStyle]="{'--background': getButtonColor(number)}" (click)="selectNumber(number)">{{ number }}</ion-button>
+    <ion-button *ngFor="let number of numbers" [ngStyle]="{'--background': getButtonColor(number)}" [class.selected]="selectedNumber === number" (click)="selectNumber(number)">{{ number }}</ion-button>
   </div>
 
   <!-- Submit and Cancel buttons centered and styled -->

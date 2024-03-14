@@ -14,11 +14,12 @@
   </ion-header>
 
   <!-- Button to add sleepiness -->
-  <ion-button expand="full" (click)="addSleepiness()">Add Sleepiness</ion-button>
+  <ion-button expand="full" class="add-sleepiness" (click)="addSleepiness()">Add Sleepiness</ion-button>
+
   
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers" class="button-container">
-    <ion-button *ngFor="let number of numbers" [class.selected]="selectedNumber === number" (click)="selectNumber(number)">{{ number }}</ion-button>
+    <ion-button *ngFor="let number of numbers" [ngStyle]="{'--background': getButtonColor(number)}" (click)="selectNumber(number)">{{ number }}</ion-button>
   </div>
 
   <!-- Submit and Cancel buttons centered and styled -->

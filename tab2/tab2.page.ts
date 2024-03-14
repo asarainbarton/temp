@@ -40,6 +40,11 @@ export class Tab2Page {
     this.showNumbers = false;
   }
 
+  getButtonColor(number: number): string {
+    const greenToRedRatio = number / 7;
+    return `hsl(${120 - greenToRedRatio * 120}, 100%, 50%)`; // HSL from green to red
+  }
+  
   submitNumber() {
     console.log(this.selectedNumber);
     this.showNumbers = false;

@@ -31,6 +31,10 @@ export class Tab2Page {
   feedbackMessage: string | null = null;
   feedbackMessageColor: string = 'black';
   isLoggingBedtime: boolean = !this.sleepService.getCurrentSleepMode();
+  randImageInt = Math.floor(Math.random() * 5) + 1;
+  dayImagePath = `assets/images/day/sunrise${this.randImageInt}.jpg`;
+  nightImagePath = `assets/images/night/sunset${this.randImageInt}.jpg`;
+  private feedbackTimeout: any;
 
   constructor(private sleepService: SleepService) {}
 
@@ -92,12 +96,19 @@ export class Tab2Page {
       this.sleepService.setSleepDateTime(new Date());
       this.sleepService.setCurrentSleepMode(true);
       this.isLoggingBedtime = false;
+      this.cancel();
 
       message = "Bedtime Successfully Set";
       messageColor = 'green';
 
       this.showFeedback(message, messageColor);
     }
+
+    this.randImageInt = Math.floor(Math.random() * 5) + 1;
+    this.dayImagePath = `assets/images/day/sunrise${this.randImageInt}.jpg`;
+    this.nightImagePath = `assets/images/night/sunset${this.randImageInt}.jpg`;
+
+    console.log(this.dayImagePath);
   }
 
   getTimeSlept(start:Date, end:Date)
@@ -135,19 +146,33 @@ export class Tab2Page {
     this.showNumbers = false;
     this.selectedNumber = undefined;
   }
-  
+
   showFeedback(message: string, color: string) {
+    // Clear any existing timeout to prevent overlap
+    clearTimeout(this.feedbackTimeout);
+  
+    // Attempt to remove any existing feedback element first
+    const existingFeedback = document.querySelector('.feedback-message');
+    if (existingFeedback) {
+      document.body.removeChild(existingFeedback);
+    }
+  
     const feedbackElement = document.createElement('div');
     feedbackElement.textContent = message;
     feedbackElement.style.color = color;
     feedbackElement.style.position = 'absolute';
-    feedbackElement.style.bottom = '7%';
+    feedbackElement.style.bottom = '70%';
     feedbackElement.style.left = '50%';
     feedbackElement.style.transform = 'translateX(-50%)';
+    feedbackElement.className = 'feedback-message'; // Assign a class for easy removal
     document.body.appendChild(feedbackElement);
   
-    setTimeout(() => {
-      document.body.removeChild(feedbackElement);
-    }, 3000); // Message gets removed after 2 seconds
+    // Set a new timeout and store its reference
+    this.feedbackTimeout = setTimeout(() => {
+      if (document.body.contains(feedbackElement)) {
+        document.body.removeChild(feedbackElement);
+      }
+    }, 2500); // Adjust timeout as needed
   }
+  
 }

@@ -15,7 +15,7 @@
 
   <!-- Button to add sleepiness -->
   <ion-button expand="full" class="add-sleepiness" (click)="addSleepiness()">Add Sleepiness</ion-button>
-
+  
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers" class="button-container">
     <ion-button *ngFor="let number of numbers" [ngStyle]="{'--background': getButtonColor(number)}" [class.selected]="selectedNumber === number" (click)="selectNumber(number)">{{ number }}</ion-button>

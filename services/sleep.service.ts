@@ -44,4 +44,17 @@ export class SleepService
 		SleepService.AllSleepData.push(sleepData);
 		SleepService.AllSleepinessData.push(sleepData);
 	}
+
+	public printAllSleepData()
+	{
+		console.log("All Sleep Data:");
+		SleepService.AllSleepData.forEach((data) => {
+		console.log(data.summaryString());
+		});
+
+		console.log("All Sleepiness Data:");
+		SleepService.AllSleepinessData.forEach((data) => {
+		console.log(data.summaryString());
+		});
+	}
 }

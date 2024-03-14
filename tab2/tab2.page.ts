@@ -3,6 +3,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/a
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { NgIf, NgForOf } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { SleepService } from '../services/sleep.service';
+import { StanfordSleepinessData } from '../data/stanford-sleepiness-data';
 
 @Component({
   selector: 'app-tab2',
@@ -26,7 +28,7 @@ export class Tab2Page {
   selectedNumber: number | undefined;
   showNumbers: boolean = false;
 
-  constructor() {}
+  constructor(private sleepService: SleepService) {}
 
   addSleepiness() {
     // Logic to add sleepiness
@@ -47,8 +49,16 @@ export class Tab2Page {
     return `hsl(${120 - greenToRedRatio * 120}, 60%, 50%)`; // HSL from green to red
   }
   
-  submitNumber() {
-    console.log(this.selectedNumber);
+  submitNumber() 
+  {
+    if(this.selectedNumber !== undefined) 
+    {
+      const sleepinessData = new StanfordSleepinessData(this.selectedNumber);
+      this.sleepService.logSleepinessData(sleepinessData);
+
+      // For testing/debigging purposes
+      this.sleepService.printAllSleepData();
+    }
     this.showNumbers = false;
     this.selectedNumber = undefined;
   }

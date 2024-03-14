@@ -12,6 +12,8 @@ export class SleepService
 	public static AllSleepData:SleepData[] = [];
 	public static AllOvernightData:OvernightSleepData[] = [];
 	public static AllSleepinessData:StanfordSleepinessData[] = [];
+	public static sleepDateTime:Date;
+	public static sleepMode:boolean = false;
 
 	constructor() {}
 

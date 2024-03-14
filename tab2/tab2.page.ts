@@ -88,6 +88,6 @@ export class Tab2Page {
   
     setTimeout(() => {
       document.body.removeChild(feedbackElement);
-    }, 3000); // Remove the message after 3 seconds
+    }, 2000); 
   }
 }

@@ -16,9 +16,11 @@
   <!-- Button to add sleepiness -->
   <ion-button expand="full" (click)="addSleepiness()">Add Sleepiness</ion-button>
   <!-- Number buttons -->
+  <!-- Number buttons -->
   <div *ngIf="showNumbers">
-    <ion-button *ngFor="let number of numbers" (click)="selectNumber(number)">{{ number }}</ion-button>
+    <ion-button *ngFor="let number of numbers" [class.selected]="selectedNumber === number" (click)="selectNumber(number)">{{ number }}</ion-button>
   </div>
+
   <!-- Submit Button -->
   <ion-button *ngIf="selectedNumber !== undefined" (click)="submitNumber()">Submit</ion-button>
 </ion-content>

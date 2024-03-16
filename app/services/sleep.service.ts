@@ -35,8 +35,8 @@ export class SleepService
 		{
 		  const data = JSON.parse(value);
 		  SleepService.AllSleepData = data.allSleepData || [];
-		  SleepService.sleepDateTime = data.sleepDateTime || null;
-		  SleepService.sleepMode = data.sleepMode || null;
+		  SleepService.sleepDateTime = new Date(data.sleepDateTime);
+		  SleepService.sleepMode = data.sleepMode;
 		}
 	}
 
@@ -57,17 +57,16 @@ export class SleepService
 	public printDataSummary() 
 	{
 		console.log(`Total Sleep Data Entries: ${SleepService.AllSleepData.length}`);
+		console.log(`Entry:: ${SleepService.AllSleepData[0].summaryString()}`);
 		
-		// Check if sleepDateTime exists and is a Date object before calling toISOString
 		const dateTimeString = SleepService.sleepDateTime instanceof Date ? 
 							   SleepService.sleepDateTime.toISOString() : 
 							   'Not set or not a Date object';
-	  
+
 		console.log(`Current Sleep DateTime: ${dateTimeString}`);
 		console.log(`Current Sleep Mode: ${SleepService.sleepMode}`);
 	}
-	  
-
+	
 	public logOvernightData(sleepData:OvernightSleepData) 
 	{
 		SleepService.AllSleepData.push(sleepData);

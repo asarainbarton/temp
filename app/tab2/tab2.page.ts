@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { NgIf, NgForOf } from '@angular/common';
@@ -24,22 +24,29 @@ import { OvernightSleepData } from '../data/overnight-sleep-data';
     CommonModule
   ]
 })
-export class Tab2Page {
+
+export class Tab2Page implements OnInit {
   numbers = [1, 2, 3, 4, 5, 6, 7];
   selectedNumber: number | undefined;
   showNumbers: boolean = false;
   feedbackMessage: string | null = null;
   feedbackMessageColor: string = 'black';
-  isLoggingBedtime: boolean = !this.sleepService.getCurrentSleepMode()
+  isLoggingBedtime: boolean = false;
   randImageInt = Math.floor(Math.random() * 5) + 1;
   dayImagePath = `assets/images/day/sunrise${this.randImageInt}.jpg`;
   nightImagePath = `assets/images/night/sunset${this.randImageInt}.jpg`;
   private feedbackTimeout: any;
 
-  constructor(private sleepService: SleepService) 
+  constructor(private sleepService: SleepService) {}
+
+  async ngOnInit() 
   {
-    this.sleepService.loadData();
-    this.sleepService.printAllSleepData();
+    await this.sleepService.loadData();
+    this.isLoggingBedtime = !this.sleepService.getCurrentSleepMode();
+    this.sleepService.printDataSummary();
+
+    // this.handleLogBedtimeData();
+    // this.sleepService.saveData();
   }
 
   addSleepiness() {
@@ -50,7 +57,7 @@ export class Tab2Page {
   selectNumber(number: number) {
     this.selectedNumber = number;
   }
-
+ 
   cancel() {
     this.selectedNumber = undefined;
     this.showNumbers = false;
@@ -89,12 +96,14 @@ export class Tab2Page {
         // For testing/debugging purposes
         // this.sleepService.printAllSleepData();
 
-        this.sleepService.saveData();
+        // this.sleepService.saveData();
         this.showFeedback(message, messageColor);
       }
 
       this.sleepService.setCurrentSleepMode(false);
       this.isLoggingBedtime = true;
+
+      this.sleepService.saveData();
 
       this.sleepService.printDataSummary();
     } 

@@ -25,7 +25,8 @@ import { OvernightSleepData } from '../data/overnight-sleep-data';
   ]
 })
 
-export class Tab2Page implements OnInit {
+export class Tab2Page implements OnInit 
+{
   numbers = [1, 2, 3, 4, 5, 6, 7];
   selectedNumber: number | undefined;
   showNumbers: boolean = false;
@@ -44,9 +45,10 @@ export class Tab2Page implements OnInit {
     await this.sleepService.loadData();
     this.isLoggingBedtime = !this.sleepService.getCurrentSleepMode();
     this.sleepService.printDataSummary();
+  }
 
-    // this.handleLogBedtimeData();
-    // this.sleepService.saveData();
+  async clearAllData() {
+    await this.sleepService.clearSleepData();
   }
 
   addSleepiness() {
@@ -89,14 +91,9 @@ export class Tab2Page implements OnInit {
         const overnightData = new OvernightSleepData(this.sleepService.getCurrentSleepDateTime(), currDate);
         this.sleepService.logOvernightData(overnightData);
         
-        // message = "Data successfully logged\n(" + this.getTimeSlept(this.sleepService.getCurrentSleepDateTime(), currDate) + ")";
         message = "Data successfully logged";
         messageColor = 'green';
 
-        // For testing/debugging purposes
-        // this.sleepService.printAllSleepData();
-
-        // this.sleepService.saveData();
         this.showFeedback(message, messageColor);
       }
 

@@ -16,11 +16,6 @@ export class SleepService
 	public static sleepDateTime: Date;
 	public static sleepMode:boolean = false;
 
-	// constructor() 
-	// {
-	// 	this.loadData();
-	// }
-
 	public addDefaultData() 
 	{
 		this.logOvernightData(new OvernightSleepData(new Date('February 18, 2021 01:03:00'), new Date('February 18, 2021 09:25:00')));
@@ -33,38 +28,69 @@ export class SleepService
 		const { value } = await Storage.get({ key: 'sleepData' });
 		if (value) 
 		{
-		  const data = JSON.parse(value);
-		  SleepService.AllSleepData = data.allSleepData || [];
-		  SleepService.sleepDateTime = new Date(data.sleepDateTime);
-		  SleepService.sleepMode = data.sleepMode;
+			const data = JSON.parse(value);
+
+			if (data.AllOvernightData) 
+			{
+				SleepService.AllOvernightData = data.AllOvernightData.map((item: any) => 
+				{
+					var temp_instance:OvernightSleepData = new OvernightSleepData(new Date(item.sleepStart), new Date(item.sleepEnd));
+					SleepService.AllSleepData.push(temp_instance);
+					return temp_instance;
+				}).filter((item: any) => item !== null);
+			}
+
+			if (data.AllSleepinessData) 
+			{
+				SleepService.AllSleepinessData = data.AllSleepinessData.map((item: any) => 
+				{
+					var temp_instance:StanfordSleepinessData = new StanfordSleepinessData(item.loggedValue, new Date(item.loggedAt));
+					SleepService.AllSleepData.push(temp_instance);
+					return temp_instance;
+				}).filter((item: any) => item !== null);
+			}
+
+			SleepService.sleepDateTime = new Date(data.sleepDateTime);
+			SleepService.sleepMode = data.sleepMode;
 		}
 	}
 
 	async saveData() 
 	{
 		const dataToSave = {
-		  allSleepData: SleepService.AllSleepData,
-		  sleepDateTime: SleepService.sleepDateTime,
-		  sleepMode: SleepService.sleepMode,
+			AllOvernightData: SleepService.AllOvernightData,
+			AllSleepinessData: SleepService.AllSleepinessData,
+			sleepDateTime: SleepService.sleepDateTime,
+			sleepMode: SleepService.sleepMode
 		};
 		
 		await Storage.set({
-		  key: 'sleepData',
-		  value: JSON.stringify(dataToSave),
+			key: 'sleepData',
+			value: JSON.stringify(dataToSave),
 		});
 	}
+
+	async clearSleepData() 
+	{
+        await Storage.remove({ key: 'sleepData' });
+
+        SleepService.AllSleepData = [];
+		SleepService.AllSleepinessData = [];
+		SleepService.AllOvernightData = [];
+    }
 
 	public printDataSummary() 
 	{
 		console.log(`Total Sleep Data Entries: ${SleepService.AllSleepData.length}`);
-		console.log(`Entry:: ${SleepService.AllSleepData[0].summaryString()}`);
-		
+	
 		const dateTimeString = SleepService.sleepDateTime instanceof Date ? 
 							   SleepService.sleepDateTime.toISOString() : 
 							   'Not set or not a Date object';
 
 		console.log(`Current Sleep DateTime: ${dateTimeString}`);
 		console.log(`Current Sleep Mode: ${SleepService.sleepMode}`);
+
+		this.printAllSleepData();
 	}
 	
 	public logOvernightData(sleepData:OvernightSleepData) 
@@ -83,7 +109,7 @@ export class SleepService
 	{
 		console.log("All Sleep Data:");
 		SleepService.AllSleepData.forEach((data) => {
-		console.log(data.summaryString());
+			console.log(data.summaryString());
 		});
 	}
 

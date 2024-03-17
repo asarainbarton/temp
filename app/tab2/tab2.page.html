@@ -1,25 +1,35 @@
-<ion-header [translucent]="true">
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       Sleep Tracker
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap" rel="stylesheet">
+</head>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Sleep Tracker</ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
+
+  <div class="custom-header akaya-telivigala-regular">
+    Sleep Tracker
+  </div>
+  
 
   <!-- Button to add overnight data -->
-  <ion-button expand="full" class="add-overnight-sleep" (click)="handleLogBedtimeData()">
+  <ion-button expand="full" class="add-overnight-sleep element" (click)="handleLogBedtimeData()">
     {{ isLoggingBedtime ? 'Log Bedtime 🌒' : 'Log Wakeup Time ☀️' }}
   </ion-button>
 
   <!-- Button to add sleepiness -->
-  <ion-button expand="full" class="add-sleepiness" *ngIf="isLoggingBedtime" (click)="addSleepiness()">Add Sleepiness 😴</ion-button>
+  <ion-button expand="full" class="add-sleepiness element2" *ngIf="isLoggingBedtime" (click)="addSleepiness()">Add Sleepiness 😴</ion-button>
   
   <!-- Number buttons centered -->
   <div *ngIf="showNumbers && isLoggingBedtime" class="button-container">

@@ -1,4 +1,4 @@
-<!-- <ion-header [translucent]="true">
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
       Tab 1
@@ -9,16 +9,40 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">All History</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <canvas id="myChart"></canvas>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
-</ion-content> -->
+  <div>
+    <span style="font-weight: bold;">Average Sleep Duration: </span>
+    &nbsp;{{ avgSleepDuration | number:'1.0-2' }} hours.
+  </div>
+  <div>
+    <span style="font-weight: bold;">Average Sleepiness: </span>
+    &nbsp;{{ avgSleepinessVal | number:'1.0-2' }}
+  </div>
+  <div class="element"></div>
 
-<ion-content>
-  <canvas id="myChart"></canvas>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">This Week</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <canvas id="myChart2"></canvas>
+
+  <div>
+    <span style="font-weight: bold;">Average Sleep Duration: </span>
+    &nbsp;{{ week_avgSleepDuration | number:'1.0-2' }} hours.
+  </div>
+  <div>
+    <span style="font-weight: bold;">Average Sleepiness: </span>
+    &nbsp;{{ week_avgSleepinessVal | number:'1.0-2' }}
+  </div>
+
 </ion-content>
+
+
 

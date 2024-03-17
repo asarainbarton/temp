@@ -8,6 +8,7 @@ import { StanfordSleepinessData } from '../data/stanford-sleepiness-data'
 import { NgIf, NgForOf } from '@angular/common';
 import { OvernightSleepData } from '../data/overnight-sleep-data';
 import Chart from 'chart.js/auto';
+import 'chartjs-adapter-date-fns';
 
 @Component({
   selector: 'app-tab1',
@@ -25,7 +26,20 @@ export class Tab1Page
   avgSleepiness:number[] = [];
   avgSleepinessDates:Date[] = [];
 
-  private myChart: Chart | null = null;
+  week_timesSlept:number[] = [];
+  week_timesSleptDates:Date[] = [];
+
+  week_avgSleepiness:number[] = [];
+  week_avgSleepinessDates:Date[] = [];
+
+  avgSleepDuration:number = 0;
+  avgSleepinessVal:number = 0;
+
+  week_avgSleepDuration:number = 0;
+  week_avgSleepinessVal:number = 0;
+
+  myChart?: Chart;
+  myChart2?: Chart;
 
   constructor(private sleepService: SleepService) {}
 
@@ -34,27 +48,65 @@ export class Tab1Page
     await this.sleepService.loadData();
     this.populateTimesSlept();
     this.populateAvgSleepiness();
-    this.plotData();
+    this.calculateAllAverages();
+    await this.plotData();
+    await this.plotData2();
   }
 
   ionViewDidEnter() 
   {
     this.populateTimesSlept();
     this.populateAvgSleepiness();
+    this.calculateAllAverages();
     this.plotData();
+    this.plotData2();
+  }
+
+  calculateAllAverages()
+  {
+    var total = 0;
+    for (let i = 0; i < this.timesSlept.length; i++) 
+      total += this.timesSlept[i];
+
+    this.avgSleepDuration = total / this.timesSlept.length;
+
+    total = 0;
+
+    for (let i = 0; i < this.avgSleepiness.length; i++) 
+      total += this.avgSleepiness[i];
+
+    this.avgSleepinessVal = total / this.avgSleepiness.length;
+
+    total = 0;
+
+    for (let i = 0; i < this.week_timesSlept.length; i++) 
+      total += this.week_timesSlept[i];
+
+    this.week_avgSleepDuration = total / this.week_timesSlept.length;
+
+    total = 0;
+
+    for (let i = 0; i < this.week_avgSleepiness.length; i++) 
+      total += this.week_avgSleepiness[i];
+
+    this.week_avgSleepinessVal = total / this.week_avgSleepiness.length;
   }
 
   plotData() 
   {
-    if (this.myChart)
-      this.myChart.destroy();
-    
     const ctx = document.getElementById('myChart') as HTMLCanvasElement;
-    const myChart = new Chart(ctx, {
+
+    if (this.myChart) 
+    {
+      this.myChart.destroy();
+      this.myChart = undefined;
+    }
+
+    this.myChart = new Chart(ctx, {
       type: 'line',
       data: 
       {
-        labels: this.timesSleptDates.map(date => date.toDateString()),
+        labels: this.timesSleptDates.map(date => date.toISOString()),
         datasets: [{
           label: 'Times Slept',
           data: this.timesSlept,
@@ -64,7 +116,7 @@ export class Tab1Page
         {
           label: 'Average Sleepiness',
           data: this.avgSleepiness,
-          borderColor: 'red',
+          borderColor: 'green',
           backgroundColor: 'transparent',
         }]
       },
@@ -89,6 +141,72 @@ export class Tab1Page
     });
   }
 
+  plotData2() 
+  {
+    const ctx = document.getElementById('myChart2') as HTMLCanvasElement;
+
+    if (this.myChart2) 
+    {
+      this.myChart2.destroy();
+      this.myChart2 = undefined;
+    }
+
+    this.myChart2 = new Chart(ctx, {
+      type: 'line',
+      data: 
+      {
+        labels: this.week_timesSleptDates.map(date => date.toISOString()),
+        datasets: [{
+          label: 'Times Slept',
+          data: this.week_timesSlept,
+          borderColor: 'blue',
+          backgroundColor: 'transparent',
+        }, 
+        {
+          label: 'Average Sleepiness',
+          data: this.week_avgSleepiness,
+          borderColor: 'green',
+          backgroundColor: 'transparent',
+        }]
+      },
+      options: 
+      {
+        scales: 
+        {
+          x: 
+          {
+            type: 'time',
+            time: 
+            {
+              unit: 'day'
+            }
+          },
+          y: 
+          {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  isDateInCurrentWeek(givenDate: Date): boolean 
+  {
+    const currentDate = new Date();
+    
+    const startOfWeek = new Date(
+      currentDate.setDate(currentDate.getDate() - currentDate.getDay())
+    );
+    startOfWeek.setHours(0, 0, 0, 0);
+    
+    const endOfWeek = new Date(
+      startOfWeek.getTime() + 6 * 24 * 60 * 60 * 1000
+    );
+    endOfWeek.setHours(23, 59, 59, 999);
+    
+    return givenDate >= startOfWeek && givenDate <= endOfWeek;
+  }
+
   populateTimesSlept()
   {
     var current_total_log_val = 0;
@@ -108,7 +226,13 @@ export class Tab1Page
         if (current_total_log_val > 0)
         {
           this.timesSleptDates.push(lastDate);
-          this.timesSlept.push(current_total_log_val);
+          this.timesSlept.push(current_total_log_val / (1000 * 60 * 60));
+
+          if (this.isDateInCurrentWeek(lastDate))
+          {
+            this.week_timesSleptDates.push(lastDate);
+            this.week_timesSlept.push(current_total_log_val / (1000 * 60 * 60));
+          }
         }
         
         current_total_log_val = data.sleepEnd.getTime() - data.sleepStart.getTime();
@@ -120,7 +244,13 @@ export class Tab1Page
     if (current_total_log_val > 0)
     {
       this.timesSleptDates.push(lastDate);
-      this.timesSlept.push(current_total_log_val);
+      this.timesSlept.push(current_total_log_val / (1000 * 60 * 60));
+
+      if (this.isDateInCurrentWeek(lastDate))
+      {
+        this.week_timesSleptDates.push(lastDate);
+        this.week_timesSlept.push(current_total_log_val / (1000 * 60 * 60));
+      }
     }
   }
 
@@ -146,6 +276,12 @@ export class Tab1Page
         {
           this.avgSleepinessDates.push(lastDate);
           this.avgSleepiness.push(current_total_log_val / count);
+
+          if (this.isDateInCurrentWeek(lastDate))
+          {
+            this.week_avgSleepinessDates.push(lastDate);
+            this.week_avgSleepiness.push(current_total_log_val / count);
+          }
         }
         
         count = 1;
@@ -160,6 +296,12 @@ export class Tab1Page
     {
       this.avgSleepinessDates.push(lastDate);
       this.avgSleepiness.push(current_total_log_val / count);
+
+      if (this.isDateInCurrentWeek(lastDate))
+      {
+        this.week_avgSleepinessDates.push(lastDate);
+        this.week_avgSleepiness.push(current_total_log_val / count);
+      }
     }
   }
 
@@ -171,6 +313,4 @@ export class Tab1Page
 
     return `${yearStr}-${monthStr}-${dayStr}`;
   }
-
-
 }

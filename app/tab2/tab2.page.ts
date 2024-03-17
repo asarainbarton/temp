@@ -184,7 +184,7 @@ export class Tab2Page implements OnInit
     feedbackElement.textContent = message;
     feedbackElement.style.color = color;
     feedbackElement.style.position = 'absolute';
-    feedbackElement.style.bottom = '70%';
+    feedbackElement.style.bottom = '60%';
     feedbackElement.style.left = '50%';
     feedbackElement.style.transform = 'translateX(-50%)';
     feedbackElement.className = 'feedback-message'; // Assign a class for easy removal

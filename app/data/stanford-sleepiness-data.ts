@@ -14,7 +14,7 @@ export class StanfordSleepinessData extends SleepData
 	'Sleepy, woozy, fighting sleep; prefer to lie down', //6
 	'No longer fighting sleep, sleep onset soon; having dream-like thoughts']; //7
 
-	private loggedValue:number;
+	public loggedValue:number;
 
 	constructor(loggedValue:number, loggedAt:Date = new Date()) 
 	{
@@ -27,4 +27,65 @@ export class StanfordSleepinessData extends SleepData
 	{
 		return "ID: " + this.id + "\nDate: " + this.loggedAt + "\nSleepiness: " + this.loggedValue + " - " + StanfordSleepinessData.ScaleValues[this.loggedValue];
 	}
+
+	summaryString1():string
+	{
+		return "ID: ";
+	}
+
+	summaryString1_5():string
+	{
+		return "" + this.id;
+	}
+
+	summaryString2():string
+	{
+		return "Date: ";
+	}
+
+	summaryString2_5():string
+	{
+		return "" + this.loggedAt;
+	}
+
+	summaryString3():string
+	{
+		return "Sleepiness: ";
+	}
+
+	summaryString3_5():string
+	{
+		return "" + this.loggedValue + " - " + StanfordSleepinessData.ScaleValues[this.loggedValue];
+	}
+
+	getTime():string
+	{
+		var am:boolean;
+		var hours = this.loggedAt.getHours();
+		const minutes = this.loggedAt.getMinutes();
+
+		if (hours >= 0 && hours <= 11)
+			am = true;
+		else 
+		{
+			am = false;
+			hours -= 12;
+		}
+
+		if (hours == 0)
+			hours = 12;
+
+		var am_str;
+		if (am)
+			am_str = " AM";
+		else 
+			am_str = " PM";
+
+		const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+
+		return timeString + am_str;
+	}
+
+	
+
 }

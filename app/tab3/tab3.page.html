@@ -1,17 +1,67 @@
 
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Choose a Date</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-datetime-button datetime="datetime"></ion-datetime-button>
+<ion-content>
+  <ion-datetime-button datetime="datetime"></ion-datetime-button>
 
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime id="datetime" (ionChange)="dateChanged($event)"></ion-datetime>
-  </ng-template>
-</ion-modal>
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime" (ionChange)="dateChanged($event)"></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <div *ngIf="selectedDateInfo">
+    {{ selectedDateInfo }}
+  </div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">{{ wanted_overnight_data }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="center-content">
+      <div>
+        <span style="font-weight: bold;">Time Slept Overnight</span>
+      </div>
+      <div>
+        <span>(Includes powernaps during the day)</span>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngFor="let data of wanted_sleepiness_data; let i = index">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">{{ data.getTime() }}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div>
+          <span style="font-weight: bold;">{{ data.summaryString3() }}</span>
+          &nbsp;{{ data.summaryString3_5() }}
+        </div>
+        <div>
+          <span style="font-weight: bold;">{{ data.summaryString2() }}</span>
+          &nbsp;{{ data.summaryString2_5() }}
+        </div>
+        <div>
+          <span style="font-weight: bold;">{{ data.summaryString1() }}</span>
+          &nbsp;{{ data.summaryString1_5() }}
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+  
 
 
-<div *ngIf="selectedDateInfo">
-  {{ selectedDateInfo }}
-</div>
+
+
+
+
 
 
 

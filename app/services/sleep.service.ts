@@ -22,7 +22,7 @@ export class SleepService
 		this.logSleepinessData(new StanfordSleepinessData(4, new Date('February 19, 2021 14:38:00')));
 		this.logOvernightData(new OvernightSleepData(new Date('February 20, 2021 23:11:00'), new Date('February 21, 2021 08:03:00')));
 	}
-
+	  
 	async loadData() 
 	{
 		const { value } = await Storage.get({ key: 'sleepData' });
@@ -35,6 +35,9 @@ export class SleepService
 				SleepService.AllOvernightData = data.AllOvernightData.map((item: any) => 
 				{
 					var temp_instance:OvernightSleepData = new OvernightSleepData(new Date(item.sleepStart), new Date(item.sleepEnd));
+					temp_instance.setLoggedAtDate(new Date(item.loggedAt));
+					temp_instance.setID(item.id);
+
 					SleepService.AllSleepData.push(temp_instance);
 					return temp_instance;
 				}).filter((item: any) => item !== null);
@@ -45,6 +48,8 @@ export class SleepService
 				SleepService.AllSleepinessData = data.AllSleepinessData.map((item: any) => 
 				{
 					var temp_instance:StanfordSleepinessData = new StanfordSleepinessData(item.loggedValue, new Date(item.loggedAt));
+					temp_instance.setID(item.id);
+					
 					SleepService.AllSleepData.push(temp_instance);
 					return temp_instance;
 				}).filter((item: any) => item !== null);
